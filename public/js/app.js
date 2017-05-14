@@ -5,3 +5,9 @@ var socket = io(); //-> this function is defined in the socketio library
 socket.on('connect', function () {  
 	console.log('Connected to socket.io server!');
 });
+
+//-> Event that it listens to from the server
+socket.on('message', function (message){
+	console.log('New message here!');
+	console.log(message.text);
+});
