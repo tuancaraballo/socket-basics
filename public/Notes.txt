@@ -1,0 +1,9 @@
+1- Socket io:
+
+Using cdn links:
+- Import Jquery
+- Import socket io 
+
+OJO: you must add socket io in client and server side
+	client is using the script tag and socket = io()
+	server on node, need to impoert the socketio module and declare the socket variable
