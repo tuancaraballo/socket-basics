@@ -6,6 +6,7 @@ console.log(now.format());
 console.log(now.format('X')); //--> this is the number of seconds since Thu, 01 Jan 1970 00:00:00 GMT
 							  //--> this is how you want to store time, so that it's easier to do math
 console.log(now.format('x')); //-> in miliseconds
+console.log("== value of ===");
 console.log(now.valueOf()); //-> in miliseconds
 
 var timestamp = 1494815217;

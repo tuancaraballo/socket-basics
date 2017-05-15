@@ -14,7 +14,11 @@ socket.on('message', function (message){
 	console.log('New message here!');
 	console.log(message.text);
 
-	jQuery('.messages').append('<p>' + message.text + '</p>');  //--> appends html
+	var timestamp = message.timestamp;
+	var timestampMoment = moment.utc(timestamp);
+    var formattedTime = timestampMoment.local().format('h:mma');
+
+	jQuery('.messages').append('<p><strong>' + formattedTime + "</strong> " + message.text + '</p>');  //--> appends html
 
 });
 
@@ -30,7 +34,7 @@ $form.on('submit', function (event) {
 
 	var $message = $form.find('input[name=message]');
 	socket.emit('message', {   
-		text: $message.val() //-> this selects all input tags whose names are equal to message
+		text: $message.val(), //-> this selects all input tags whose names are equal to message
 	});                                    //--> .val() pulls the value out
 
 	$message.val(''); //-> this resets the input

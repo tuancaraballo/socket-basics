@@ -1,5 +1,6 @@
 var PORT = process.env.PORT || 3000;
 var express = require('express');
+var moment = require('moment');
 
 var app = express();
 var http = require('http').Server(app);// --> start a new server node and use this
@@ -30,13 +31,16 @@ io.on('connection', function (socket) {//--> it lets the socket listen for event
 	socket.on('message', function (message) {
 		console.log('Message received ' + message.text);
 
+		message.timestamp = moment().valueOf();
+
 		io.emit('message',message); 
 		//socket.broadcast.emit('message',message);  
 	});
 
 	//--> message sent to the user from server when he connects to the server
 	socket.emit('message', { 
-		text: 'Welcome to my Stanford chat application'
+		text: 'Welcome to my Stanford chat application',
+		timestamp: moment().valueOf()
 	});
 }); 
 
