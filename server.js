@@ -39,6 +39,7 @@ io.on('connection', function (socket) {//--> it lets the socket listen for event
 
 	//--> message sent to the user from server when he connects to the server
 	socket.emit('message', { 
+		name: 'System',
 		text: 'Welcome to my Stanford chat application',
 		timestamp: moment().valueOf()
 	});

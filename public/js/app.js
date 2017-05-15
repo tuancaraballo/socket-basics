@@ -1,4 +1,11 @@
+var name = getQueryVariable('name') || 'Anonymous';
+
+var room = getQueryVariable('room');
+
 var socket = io(); //-> this function is defined in the socketio library
+
+console.log(name + ' wants to join ' + room);
+
 
 //-> first argument is the event name and the second is the function to run when the
 //    when the event happens
@@ -14,11 +21,16 @@ socket.on('message', function (message){
 	console.log('New message here!');
 	console.log(message.text);
 
+
+
+	var $message = jQuery('.messages');
+
 	var timestamp = message.timestamp;
 	var timestampMoment = moment.utc(timestamp);
     var formattedTime = timestampMoment.local().format('h:mma');
 
-	jQuery('.messages').append('<p><strong>' + formattedTime + "</strong> " + message.text + '</p>');  //--> appends html
+	$message.append('<p><strong>' + message.name +" "+formattedTime + "</strong></p>" );
+	$message.append("<p> "+message.text + '</p>');  //--> appends html
 
 });
 
@@ -34,7 +46,8 @@ $form.on('submit', function (event) {
 
 	var $message = $form.find('input[name=message]');
 	socket.emit('message', {   
-		text: $message.val(), //-> this selects all input tags whose names are equal to message
+		name: name,         //--> this is the name that you grabbed from above
+		text: $message.val() //-> this selects all input tags whose names are equal to message
 	});                                    //--> .val() pulls the value out
 
 	$message.val(''); //-> this resets the input
