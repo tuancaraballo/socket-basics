@@ -11,8 +11,40 @@ var io = require('socket.io')(http); //->format that socket io expects
 
 app.use(express.static(__dirname + '/public'));
 
+/*
+ClientInfo = {}
+
+  '1234abc': {
+  	    name : 'tuan',
+		room : "stanford"
+  }
+*/
 var clientInfo = {};
 
+//Purpose: sends current users to provided socket
+
+function sendCurrentUsers(socket){
+	var info = clientInfo[socket.id];
+	var users = [];
+
+	if (typeof info === 'undefined'){
+		return;
+	}
+
+	Object.keys(clientInfo).forEach(function (socketId) {
+		var userInfo = clientInfo[socketId];
+
+		if(info.room === userInfo.room){
+			users.push(userInfo.name);
+		}
+	});
+
+	socket.emit('message', {
+		name: 'System',
+		text: 'Current users: ' + users.join(', '),  //--> it stringify all elements in the array together
+	timestamp: moment().valueOf()
+	});
+}
 
 /*
 	Lessons
@@ -55,11 +87,15 @@ io.on('connection', function (socket) {//--> it lets the socket listen for event
 	socket.on('message', function (message) {
 		console.log('Message received ' + message.text);
 
-		message.timestamp = moment().valueOf();
-
-		io.to(clientInfo[socket.id].room).emit('message',message); //--> only emits the info to the chats
+		if(message.text === '@currentUsers') {
+			sendCurrentUsers(socket);
+		}else{
+			message.timestamp = moment().valueOf();
+			io.to(clientInfo[socket.id].room).emit('message',message); //--> only emits the info to the chats
 																	// where the user is logged in
 		//socket.broadcast.emit('message',message);  
+		}
+		
 	});
 
 	//--> message sent to the user from server when he connects to the server
