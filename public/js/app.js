@@ -7,9 +7,15 @@ socket.on('connect', function () {
 });
 
 //-> Event that it listens to from the server
+
+
+
 socket.on('message', function (message){
 	console.log('New message here!');
 	console.log(message.text);
+
+	jQuery('.messages').append('<p>' + message.text + '</p>');  //--> appends html
+
 });
 
 

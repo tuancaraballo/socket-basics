@@ -30,7 +30,8 @@ io.on('connection', function (socket) {//--> it lets the socket listen for event
 	socket.on('message', function (message) {
 		console.log('Message received ' + message.text);
 
-		socket.broadcast.emit('message',message);  
+		io.emit('message',message); 
+		//socket.broadcast.emit('message',message);  
 	});
 
 	//--> message sent to the user from server when he connects to the server
