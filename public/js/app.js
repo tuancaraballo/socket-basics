@@ -1,6 +1,6 @@
 var name = getQueryVariable('name') || 'Anonymous';
 
-var room = getQueryVariable('room');
+var room = getQueryVariable('room') || 'Unspecified room';
 
 var socket = io(); //-> this function is defined in the socketio library
 
@@ -11,15 +11,20 @@ console.log(name + ' wants to join ' + room);
 //    when the event happens
 socket.on('connect', function () {  
 	console.log('Connected to socket.io server!');
+	socket.emit('joinRoom', {
+		name: name,
+		room: room
+	});
 });
 
+
+var $room_title = jQuery('.room-title');
+$room_title.text(room);
+
+
 //-> Event that it listens to from the server
-
-
-
 socket.on('message', function (message){
-	console.log('New message here!');
-	console.log(message.text);
+
 
 
 
@@ -31,6 +36,8 @@ socket.on('message', function (message){
 
 	$message.append('<p><strong>' + message.name +" "+formattedTime + "</strong></p>" );
 	$message.append("<p> "+message.text + '</p>');  //--> appends html
+
+
 
 });
 

@@ -11,6 +11,9 @@ var io = require('socket.io')(http); //->format that socket io expects
 
 app.use(express.static(__dirname + '/public'));
 
+var clientInfo = {};
+
+
 /*
 	Lessons
 
@@ -26,6 +29,15 @@ app.use(express.static(__dirname + '/public'));
 io.on('connection', function (socket) {//--> it lets the socket listen for events
 	console.log('User connected via socket.io!');
 
+	socket.on('joinRoom', function (request) {
+		clientInfo[socket.id] = request; //--> saves the socket_room ID
+		socket.join(request.room);  //--> specific method that binds  a socket to specific room name
+		socket.broadcast.to(request.room).emit('message', { //--> to allows you to send message to this room socket only
+			name: 'System',
+			text: request.name + " has joined!",
+			timestamp: moment.valueOf()
+		});
+	});
 	//--> this listens for the event, this allows two browsers to talk to each other
 	//-> event that it listens to from the client
 	socket.on('message', function (message) {
@@ -33,7 +45,8 @@ io.on('connection', function (socket) {//--> it lets the socket listen for event
 
 		message.timestamp = moment().valueOf();
 
-		io.emit('message',message); 
+		io.to(clientInfo[socket.id].room).emit('message',message); //--> only emits the info to the chats
+																	// where the user is logged in
 		//socket.broadcast.emit('message',message);  
 	});
 
