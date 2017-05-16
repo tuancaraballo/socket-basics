@@ -25,10 +25,8 @@ $room_title.text(room);
 //-> Event that it listens to from the server
 socket.on('message', function (message){
 
-
-
-
-	var $message = jQuery('.messages');
+	var $messages = jQuery('.messages');
+	var $message = jQuery('<li class="list-group-item"></li>'); //-> creates an element
 
 	var timestamp = message.timestamp;
 	var timestampMoment = moment.utc(timestamp);
@@ -36,9 +34,7 @@ socket.on('message', function (message){
 
 	$message.append('<p><strong>' + message.name +" "+formattedTime + "</strong></p>" );
 	$message.append("<p> "+message.text + '</p>');  //--> appends html
-
-
-
+	$messages.append($message)
 });
 
 
